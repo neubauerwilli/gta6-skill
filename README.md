@@ -35,7 +35,7 @@ Chat laufen nur die Skills ohne Dateiarbeit (Kampagnen, Streams, Hook, Caption, 
 | Claude Code | Skills ausführen, Befehle starten | ja, für Schnitt und Momente |
 | yt-dlp | VOD-Abschnitte und Untertitel holen | ja, für Momente und Schnitt |
 | ffmpeg | Schneiden, Format 9:16, Untertitel einbrennen | ja, für Schnitt |
-| Whisper (`openai-whisper` oder `faster-whisper`) | Transkript, wenn keine Untertitel da sind | optional |
+| Whisper (`faster-whisper` empfohlen, alternativ `openai-whisper` mit dem Befehl `whisper`) | Transkript, wenn keine Untertitel da sind | optional |
 | Python 3.8 oder neuer | nur für Whisper und `tests/pruefen.py` | optional |
 
 **Windows (PowerShell):**
@@ -43,7 +43,7 @@ Chat laufen nur die Skills ohne Dateiarbeit (Kampagnen, Streams, Hook, Caption, 
 ```powershell
 winget install yt-dlp.yt-dlp
 winget install Gyan.FFmpeg
-# optional:
+# optional, für Transkripte ohne Untertitel (lädt beim ersten Lauf ein Modell):
 py -m pip install faster-whisper
 ```
 
@@ -53,7 +53,7 @@ Danach ein neues Terminal öffnen und prüfen: `yt-dlp --version` und `ffmpeg -v
 
 ```bash
 brew install yt-dlp ffmpeg
-# optional:
+# optional, für Transkripte ohne Untertitel (lädt beim ersten Lauf ein Modell):
 pip3 install faster-whisper
 ```
 

@@ -29,8 +29,37 @@ Die Folgeaufrufe verwenden den Plugin-Namensraum `gta6-skill:`. Bei einzeln kopi
 1. Nimm den Clip aus `gta6/clips/`. Frag die Sprache: Untertitel in der Sprache des Streamers, oder eine
    Übersetzung ins Deutsche. Übersetzt wird nur, wenn die Kampagne es erlaubt, und eine Übersetzung darf den
    Sinn nicht verfälschen.
-2. Transkript mit Wortzeiten: `whisper` oder `faster-whisper` mit Wort-Zeitstempeln, falls installiert
-   (`whisper clip.mp4 --word_timestamps True --output_format json`). Sonst die Untertitel aus yt-dlp
+2. Transkript mit Wortzeiten. Prüf zuerst, was installiert ist:
+   - **faster-whisper** (im README empfohlen) ist eine Python-Bibliothek ohne eigenen `whisper`-Befehl. Lege
+     dafür einmal `gta6/quelle/transkript.py` an, falls die Datei noch fehlt:
+
+     ```python
+     import json, sys
+     from faster_whisper import WhisperModel
+
+     quelle, ziel = sys.argv[1], sys.argv[2]
+     sprache = sys.argv[3] if len(sys.argv) > 3 else None
+     modell = WhisperModel("small", compute_type="int8")
+     segmente, info = modell.transcribe(quelle, language=sprache, word_timestamps=True)
+     daten = {"sprache": info.language, "segmente": []}
+     for s in segmente:
+         daten["segmente"].append({
+             "start": round(s.start, 3), "ende": round(s.end, 3), "text": s.text.strip(),
+             "woerter": [{"wort": w.word.strip(), "start": round(w.start, 3), "ende": round(w.end, 3)}
+                         for w in (s.words or [])],
+         })
+     with open(ziel, "w", encoding="utf-8") as f:
+         json.dump(daten, f, ensure_ascii=False, indent=1)
+     print(len(daten["segmente"]), "Segmente, Sprache", info.language)
+     ```
+
+     Aufruf: `python3 gta6/quelle/transkript.py gta6/clips/<nr>-roh.mp4 gta6/clips/<nr>-woerter.json de`
+     (unter Windows `py`; die Sprache `de` oder `en` am Ende ist optional). Der erste Lauf lädt das Modell
+     `small` herunter, das dauert einige Minuten.
+   - **openai-whisper** bringt den Befehl `whisper` mit: `whisper gta6/clips/<nr>-roh.mp4 --model small
+     --word_timestamps True --output_format json --output_dir gta6/clips`.
+
+   Ist keines von beiden da, die Untertitel aus yt-dlp
    zuschneiden und alle Zeiten um den Clipstart auf null verschieben. Satzweise Untertitel sind keine
    Wortzeiten: Fehlen Wortzeiten, keine angeblich synchronen Worthervorhebungen erfinden. Dann entweder
    echte Wortausrichtung erzeugen oder normale Untertitel anbieten. Ist beides nicht da, sag es und

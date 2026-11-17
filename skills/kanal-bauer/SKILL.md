@@ -37,9 +37,12 @@ Die Folgeaufrufe verwenden den Plugin-Namensraum `gta6-skill:`. Bei einzeln kopi
    - Banner-Text und eine Idee fürs Profilbild, die der Nutzer selbst gestaltet oder fotografiert,
    - drei Playlists (zum Beispiel nach Streamer, nach Art des Moments, "Beste der Woche"),
    - eine Checkliste zum Anlegen: Kanal erstellen, Handle setzen, Beschreibung, Banner, Profilbild, erster Upload.
-3. **Schnell zu AdSense:** Schreib einen Plan, wie der Kanal die aktuellen Schwellen des YouTube-Partnerprogramms
-   für Shorts erreicht (Abonnenten und Shorts-Aufrufe laut offizieller YouTube-Hilfe, mit Link und Abrufdatum):
-   wie viele Shorts pro Tag, welche Momente zuerst, wann der Antrag gestellt wird. Keine Zusage, wann es klappt.
+3. **Weg ins YouTube-Partnerprogramm:** Schreib einen Plan, wie der Kanal die aktuellen Schwellen des
+   YouTube-Partnerprogramms für Shorts erreicht (Abonnenten und Shorts-Aufrufe laut offizieller YouTube-Hilfe,
+   mit Link und Abrufdatum): wie viele Shorts pro Tag, welche Momente zuerst, wann der Antrag gestellt wird.
+   Das AdSense-Konto wird erst bei diesem Antrag verknüpft. Plane nur Shorts mit eigenem Beitrag (siehe Punkt 4):
+   Mehr Uploads aus fremden Streams ohne eigenen Anteil bringen den Kanal nicht schneller ins Programm, sie
+   riskieren eine Ablehnung wegen wiederverwendeter Inhalte. Keine Zusage, wann es klappt.
 4. Geld über YouTube: Shorts können über das YouTube-Partnerprogramm Geld bringen, sobald der Kanal die
    Voraussetzungen erfüllt. Nenne die aktuellen Voraussetzungen nur mit Quelle (offizielle YouTube-Hilfe,
    Abrufdatum). Weise in einem Satz darauf hin, dass reine Übernahmen fremder Streams ohne eigenen Anteil als

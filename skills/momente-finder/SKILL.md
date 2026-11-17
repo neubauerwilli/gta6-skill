@@ -39,11 +39,39 @@ der Python-Aufruf oft `py` statt `python3`.
 2. Hole nur, was du brauchst, in den Ordner `gta6/quelle/`:
    - Untertitel: `yt-dlp --skip-download --write-auto-subs --sub-langs "en.*,de.*" --convert-subs srt -o
      "gta6/quelle/%(id)s" <Link>`
-   - Chat bei Twitch-VODs, falls vorhanden: `yt-dlp --skip-download --write-subs --sub-langs live_chat -o ...`
-     (klappt nicht bei jedem Link, dann ohne Chat weiter und das sagen).
-   - Kein Untertitel da: nur den Ton laden (`yt-dlp -x --audio-format mp3 ...`) und, wenn `whisper` oder
-     `faster-whisper` installiert ist, daraus ein Transkript machen. Ist nichts installiert, sag es und schlage
-     die Installation vor, statt zu raten.
+   - Chat bei YouTube-VODs von Livestreams: `yt-dlp --skip-download --write-subs --sub-langs live_chat -o
+     "gta6/quelle/%(id)s" <Link>` holt die Chat-Wiederholung als `.live_chat.json`. Fehlt sie, ohne Chat weiter
+     und das sagen.
+   - Chat bei Twitch- und Kick-VODs: Den holt yt-dlp nicht. Hat der Nutzer einen eigenen Chat-Export mit
+     Zeitstempeln (JSON oder CSV), nutze ihn. Sonst ohne Chat weiter und das sagen.
+   - Kein Untertitel da: nur den Ton laden (`yt-dlp -x --audio-format mp3 ...`) und daraus ein Transkript
+     machen. Mit **faster-whisper** (Python-Bibliothek, kein eigener Befehl) legst du einmal
+     `gta6/quelle/transkript.py` an, falls die Datei noch fehlt:
+
+       ```python
+       import json, sys
+       from faster_whisper import WhisperModel
+
+       quelle, ziel = sys.argv[1], sys.argv[2]
+       sprache = sys.argv[3] if len(sys.argv) > 3 else None
+       modell = WhisperModel("small", compute_type="int8")
+       segmente, info = modell.transcribe(quelle, language=sprache, word_timestamps=True)
+       daten = {"sprache": info.language, "segmente": []}
+       for s in segmente:
+           daten["segmente"].append({
+               "start": round(s.start, 3), "ende": round(s.end, 3), "text": s.text.strip(),
+               "woerter": [{"wort": w.word.strip(), "start": round(w.start, 3), "ende": round(w.end, 3)}
+                           for w in (s.words or [])],
+           })
+       with open(ziel, "w", encoding="utf-8") as f:
+           json.dump(daten, f, ensure_ascii=False, indent=1)
+       print(len(daten["segmente"]), "Segmente, Sprache", info.language)
+       ```
+
+     Aufruf: `python3 gta6/quelle/transkript.py gta6/quelle/<id>.mp3 gta6/quelle/<id>-transkript.json`
+     (unter Windows `py`). Der erste Lauf lädt das Modell herunter. Mit **openai-whisper** geht es über den
+     Befehl `whisper gta6/quelle/<id>.mp3 --model small --output_format srt --output_dir gta6/quelle`.
+     Ist nichts installiert, sag es und schlage die Installation vor, statt zu raten.
 3. Lautstärke: `ffmpeg -i Ton.mp3 -af ebur128 -f null -` oder `astats` liefert Spitzen. Nutze sie als Hinweis,
    nie als Beweis.
 4. Gehe das Transkript nach Momenten durch: Schrei, Lachen, Überraschung, Chaos im Spiel, Streamer-Reaktion,
